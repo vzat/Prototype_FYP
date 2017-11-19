@@ -1,0 +1,24 @@
+{
+  "name": "data-retriever",
+  "version": "0.0.0",
+  "description": "MongoDB Data Retriever",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mongodb",
+    "data",
+    "api"
+  ],
+  "author": "Vlad Zat",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0"
+  }
+}
