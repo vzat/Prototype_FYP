@@ -3,9 +3,15 @@ const logger = require('../utils/logger.js');
 const config = require('config');
 let localDB = null;
 
+// function connect(token) {
+//     return localDB.collections().then(function () {
+//
+//     });
+// };
+
 module.exports = {
-    connectLocal: function() {
-        const uri = 'mongodb://' + config.db.server + ':' + config.db.port + '/accounts';
+    connectLocal: function () {
+        const uri = 'mongodb://' + config.db.server + ':' + config.db.port + '/mongo';
         let retries = 0;
 
         return new Promise(function (resolve, reject) {
@@ -29,5 +35,9 @@ module.exports = {
                     });
             }, config.db.intervalRetries);
         });
+    },
+    connect: function () {
+        const accounts = localDB.collection('accounts');
+        
     }
 };
