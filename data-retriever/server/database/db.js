@@ -43,10 +43,12 @@ function connect (token, database) {
                         resolve(db);
                     })
                     .catch(function (err) {
+                        logger.log('error', err);
                         reject(err);
                     });
             })
             .catch(function (err) {
+                logger.log('error', err);
                 reject(err);
             });
     });
@@ -77,6 +79,26 @@ module.exports = {
                         }
                     });
             }, config.db.intervalRetries);
+        });
+    },
+    getCollections: function (token, database) {
+        return new Promise(function (resolve, reject) {
+            connect(token, database)
+                .then(function (db) {
+                    db.listCollections().toArray()
+                        .then(function (collections) {
+                            resolve(collections);
+                        })
+                        .catch(function (err) {
+                            reject(err);
+                        })
+                        .finally(function () {
+                            db.close();
+                        });
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
         });
     }
 };

@@ -19,7 +19,13 @@ router.get('/:database/collections', function (req, res) {
 
     res.setHeader('Content-Type', 'application/json');
 
-    res.send(database + '?auth=' + token);
+    db.getCollections(token, database)
+        .then(function (collections) {
+            res.send(JSON.stringify(collections));
+        })
+        .catch(function (err) {
+            res.send(JSON.stringify({'error': err}));
+        });
 });
 
 router.get('/:database/:collection/documents', function (req, res) {

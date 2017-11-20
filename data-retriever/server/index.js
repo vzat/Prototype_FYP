@@ -21,13 +21,9 @@ module.exports = new Promise(function (resolve, reject) {
 
         app.use('/api/v1', routes);
 
-        db.connect('a123', 'blog')
-            .then(function (db) {
-                logger.log('info', db);
-            })
-            .catch(function (err) {
-                logger.log('error', err);
-            });
+        // db.getCollections('a123', 'blog').then(function (collections) {
+        //     logger.log('info', collections);
+        // });
 
         const listen = app.listen(app.get('port'), function () {
             logger.log('info', 'Connection Manager Server listening on port ' + app.get('port'));
