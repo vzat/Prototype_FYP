@@ -1,0 +1,36 @@
+{
+    "username": "admin",
+    "password": "pass",
+    "email": "admin@admin.com",
+    "token": "z321",
+    "databases": [{
+        "name": "mongo",
+        "address": "localhost",
+        "port": 27017,
+        "username": "user",
+        "password": "pass",
+        "type": "single-node"
+    }]
+},
+{
+    "username": "jsmith",
+    "password": "1234",
+    "email": "jsmith@smiths.com",
+    "token": "a123",
+    "databases": [{
+        "name": "blog",
+        "address": "localhost",
+        "port": 27017,
+        "username": "user",
+        "password": "pass",
+        "type": "single-node"
+    },
+    {
+        "name": "tests",
+        "address": "localhost",
+        "port": 27017,
+        "username": "user",
+        "password": "pass",
+        "type": "single-node"
+    }]
+}

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import db from './utils/db.js';
 import './App.css';
 
 class App extends Component {
   state = {
-      conns: {
-
-      }
+      conns: ""
   };
 
   componentDidMount = () => {
@@ -15,7 +12,7 @@ class App extends Component {
   };
 
   getConnections = () => {
-    db.getConnections(connections => {
+    db.getConnections('jsmith', connections => {
       this.setState({
         conns: connections
       })
@@ -23,16 +20,26 @@ class App extends Component {
   };
 
   render() {
-    const { connections } = this.state.conns;
+    let connections = this.state.conns;
+    let connectionList = Object.keys(connections).map((connectionNo) => (
+        <div className="connection">
+            Database: {connections[connectionNo]}
+        </div>
+
+        // <li key={connectionNo}>
+        //     {connections[connectionNo]}
+        //     <button>View</button>
+        // </li>
+    ));
 
     return (
       <div className="App">
         <header className="App-header">
           <h1> Connection Manager </h1>
         </header>
-        <p>
-          {connections}
-        </p>
+        <ul>
+          {connectionList}
+        </ul>
         <button>Create Connection</button>
       </div>
     );
