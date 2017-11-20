@@ -1,0 +1,8 @@
+{
+    "db": {
+        "server": "localhost",
+        "port": 27017,
+        "maxRetries": 100,
+        "intervalRetries": 1000
+    }
+}

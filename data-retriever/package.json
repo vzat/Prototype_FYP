@@ -17,8 +17,11 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
+    "config": "^1.28.1",
     "cors": "^2.8.4",
     "express": "^4.16.2",
-    "morgan": "^1.9.0"
+    "mongodb": "^2.2.33",
+    "morgan": "^1.9.0",
+    "winston": "^2.4.0"
   }
 }
