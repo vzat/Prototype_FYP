@@ -100,5 +100,26 @@ module.exports = {
                     reject(err);
                 });
         });
+    },
+    getDocuments: function (token, database, collectionName) {
+        return new Promise(function (resolve, reject) {
+            connect(token, database)
+              .then(function (db) {
+                  const collection = db.collection(collectionName);
+                  collection.find().toArray()
+                      .then(function (documents) {
+                          resolve(documents);
+                      })
+                      .catch(function (err) {
+                          reject(err);
+                      })
+                      .finally(function () {
+                          db.close();
+                      });
+              })
+              .catch(function (err) {
+                  reject(err);
+              });
+        });
     }
 };

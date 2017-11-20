@@ -35,7 +35,13 @@ router.get('/:database/:collection/documents', function (req, res) {
 
     res.setHeader('Content-Type', 'application/json');
 
-    res.send(database + '/' + collection + '?auth=' + token);
+    db.getDocuments(token, database, collection)
+        .then(function (documents) {
+            res.send(JSON.stringify(documents));
+        })
+        .catch(function (err) {
+            res.send(JSON.stringify({'error': err}));
+        });
 });
 
 module.exports = router;
