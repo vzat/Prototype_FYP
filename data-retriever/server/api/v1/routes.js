@@ -7,7 +7,7 @@ function getToken(auth) {
     let token = auth;
 
     if (auth.indexOf('Bearer') !== -1) {
-        token = auth.substring('Bearer'.length + 1)
+        token = auth.substring('Bearer'.length + 1);
     }
 
     return token;
