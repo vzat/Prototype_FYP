@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../database/db.js');
-const logger = require('../../utils/logger.js');
 
 function getToken(auth) {
     let token = auth;

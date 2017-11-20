@@ -1,7 +1,8 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
+const routes = require('./api/v1/routes.js');
 
 module.exports = new Promise(function (resolve, reject) {
     app.set('port', process.env.SERVER_PORT || 3001);
@@ -12,7 +13,7 @@ module.exports = new Promise(function (resolve, reject) {
         res.end('Hello World');
     });
 
-    // app.use('/api/v1', routes);
+    app.use('/api/v1', routes);
 
     const listen = app.listen(app.get('port'), function () {
         console.log('Connection Manager Server listening on port ' + app.get('port'));
