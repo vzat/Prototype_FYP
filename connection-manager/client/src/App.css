@@ -10,6 +10,7 @@
 .connection {
   padding: 10px;
   border-style: solid;
+  display: inline-block;
 }
 
 .account {
