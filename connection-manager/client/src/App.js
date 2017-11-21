@@ -86,20 +86,19 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1> Connection Manager </h1>
+          <h1 class="header"> Connection Manager </h1>
+          <div class="account">
+            Username: {account.username}
+            <br/>
+            Email: {account.email}
+            <br/>
+            API Token: {account.token}
+            <br/>
+          </div>
         </header>
 
-        <div class="account">
-          Username: {account.username}
-          <br/>
-          Email: {account.email}
-          <br/>
-          API Token: {account.token}
-          <br/>
-        </div>
-
         {connectionList}
-        <br/>
+        <br/><br/>
         <button>Create Connection</button>
       </div>
     );
