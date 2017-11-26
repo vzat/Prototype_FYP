@@ -22,3 +22,8 @@
 .PrettyData {
     padding: 20px;
 }
+
+.Document {
+    padding: 10px;
+    float: left;
+}

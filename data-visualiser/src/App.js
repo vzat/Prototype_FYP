@@ -7,6 +7,10 @@ import Paper from 'material-ui/Paper';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {List, ListItem} from 'material-ui/List';
+import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 
 class App extends Component {
     state = {
@@ -15,14 +19,13 @@ class App extends Component {
         collections: {
         },
         data: {
-        }
+        },
+        collectionDialog: false
     };
 
     componentDidMount = () => {
         this.getCollections(this.state.database, this.state.token);
-        // onClick = {this.getData(collections[collection].name)}
         this.getData('posts');
-
     };
 
     getCollections = (database, token) => {
@@ -43,16 +46,19 @@ class App extends Component {
         });
     };
 
-    render() {
-      const collections = this.state.collections;
-      const collectionList = Object.keys(collections).map((collection) => (
-            <MenuItem
-                primaryText = {collections[collection].name}
-                onClick = {() => this.getData(collections[collection].name)}
-            />
-      ));
-      const data = this.state.data;
+    openCollectionDialog = () => {
+        this.setState({
+            collectionDialog: true
+        });
+    };
 
+    closeCollectionDialog = () => {
+        this.setState({
+            collectionDialog: false
+        });
+    };
+
+    render() {
       const styles = {
           paper: {
               height: "100%",
@@ -63,33 +69,89 @@ class App extends Component {
           },
           tabs: {
               width: "100%"
+          },
+          document: {
+              width: "200px",
+              height: "300px",
+              overflow: "hidden"
           }
       }
+
+      const collections = this.state.collections;
+      const collectionList = Object.keys(collections).map((collection) => (
+          <MenuItem
+              primaryText = {collections[collection].name}
+              onClick = {() => this.getData(collections[collection].name)}
+          />
+      ));
+
+      const data = this.state.data;
+      const documentList = Object.keys(data).map((documentNo) => (
+          <div className = "Document">
+              <Paper style = {styles.document}>
+                  <List>
+                      {
+                          Object.keys(data[documentNo]).map((key) => (
+                              <ListItem
+                                  primaryText = {key}
+                                  secondaryText= {data[documentNo][key]} />
+                          ))
+                      }
+                  </List>
+              </Paper>
+          </div>
+      ));
+
+      const newCollectionActions =[
+          <TextField
+              hintText = "Collection Name"
+              fullWidth = {true}
+          />,
+          <RaisedButton
+              label = "Submit"
+          />,
+          <RaisedButton
+              label = "Cancel"
+              onClick = {this.closeCollectionDialog}
+          />
+      ];
+
+
 
       return (
         <MuiThemeProvider>
             <div className="App">
 
+                <Dialog
+                    title = "Add Collection"
+                    open = {this.state.collectionDialog}
+                    actions = {newCollectionActions}
+                />
+
                 <div className = "Menu">
                     <Paper style = {styles.paper}>
+                        <h3>Collections</h3>
                         <Menu style = {styles.menu}>
                             { collectionList }
                         </Menu>
+                        <RaisedButton
+                            label = "New Collection"
+                            onClick = {this.openCollectionDialog} />
                     </Paper>
                 </div>
 
                 <div className = "Content">
                     <Tabs style = {styles.tabs}>
+                        <Tab label = "Visualised Data">
+                            <div className = "PrettyData">
+                                {documentList}
+                            </div>
+                        </Tab>
                         <Tab label = "Raw Data">
                             <div className = "RawData">
                                 <pre>
                                     { JSON.stringify(data, null, '\t') }
                                   </pre>
-                            </div>
-                        </Tab>
-                        <Tab label = "Visualised Data">
-                            <div className = "PrettyData">
-                                Pretty Data
                             </div>
                         </Tab>
                     </Tabs>
