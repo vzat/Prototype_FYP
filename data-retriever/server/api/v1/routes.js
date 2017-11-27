@@ -43,4 +43,22 @@ router.get('/:database/:collection/documents', function (req, res) {
         });
 });
 
+router.put('/:database/:collection/document', function (req, res) {
+    const token = getToken(req.get('Authorization'));
+    const database = req.params.database;
+    const collection = req.params.collection;
+    const query = req.body.query;
+    const data = req.body.data;
+
+    res.setHeader('Content-Type', 'application/json');
+
+    db.replaceDocument(token, database, collection, query, data)
+        .then(function () {
+            res.send(JSON.stringify({}));
+        })
+        .catch(function (err) {
+            res.send(JSON.stringify({'error': err}));
+        });
+});
+
 module.exports = router;

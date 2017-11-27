@@ -121,5 +121,26 @@ module.exports = {
                   reject(err);
               });
         });
+    },
+    replaceDocument: function (token, database, collectionName, query, data) {
+        return new Promise(function (resolve, reject) {
+            connect(token, database)
+                .then(function (db) {
+                    const collection = db.collection(collectionName);
+                    collection.replaceOne(query, data)
+                        .then(function () {
+                            resolve();
+                        })
+                        .catch(function (err) {
+                            reject(err);
+                        })
+                        .finally(function () {
+                            db.close();
+                        });
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
+        });
     }
 };
