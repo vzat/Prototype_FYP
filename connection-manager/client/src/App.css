@@ -9,9 +9,10 @@
 
 .connection {
   padding: 10px;
-  border-style: solid;
-  display: inline-block;
-  width: 400px;
+  /*border-style: solid;*/
+  /*display: inline-block;*/
+  /*width: 400px;*/
+  float: left;
 }
 
 .account {
@@ -21,4 +22,8 @@
 
 .header, .account {
   display: inline-block;
+}
+
+.create-connection {
+  display: block;
 }

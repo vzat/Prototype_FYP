@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import db from './utils/db.js';
 import './App.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 class App extends Component {
   state = {
@@ -69,38 +73,75 @@ class App extends Component {
   };
 
   render() {
+    const styles = {
+        card: {
+            height: "100%",
+            width: "100%"
+        }
+    }
+
     let connections = this.state.connections;
     let connectionList = Object.keys(connections).map((connectionNo) => (
         <div className="connection">
-            Database: {connections[connectionNo].name}
-            <br/>
-            URI:
-            mongodb://
-            {connections[connectionNo].dbuser}:{connections[connectionNo].dbpass}
-            @{connections[connectionNo].address}:{connections[connectionNo].port}
-            /{connections[connectionNo].name}
+            <Card>
+                <CardHeader
+                    title = {connections[connectionNo].name}
+                    subtitle = {
+                                  "mongodb://<dbname>:<dbpass>@" +
+                                  connections[connectionNo].address +
+                                  ":" +
+                                  connections[connectionNo].port +
+                                  "/" +
+                                  connections[connectionNo].name
+                               }
+                    actAsExpander = {true}
+                    showExpandableButton = {true}
+                />
+                <CardActions>
+                    <RaisedButton
+                        label = "View"
+                        primary = {true}
+                    />
+                </CardActions>
+                <CardText expandable={true}>
+                    dbname: {connections[connectionNo].dbuser}
+                    <br/>
+                    dbpass: {connections[connectionNo].dbpass}
+                </CardText>
+            </Card>
         </div>
     ));
     let account = this.state.account;
 
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 class="header"> Connection Manager </h1>
-          <div class="account">
-            Username: {account.username}
-            <br/>
-            Email: {account.email}
-            <br/>
-            API Token: {account.token}
-            <br/>
-          </div>
-        </header>
+        <MuiThemeProvider>
+            <div className="App">
+              <header className="App-header">
+                  <h1 class="header"> Connection Manager </h1>
 
-        {connectionList}
-        <br/><br/>
-        <button>Create Connection</button>
-      </div>
+                  <div class="account">
+                      <Card>
+                          <CardHeader
+                              title = {account.username}
+                              subtitle = {account.email}
+                              actAsExpander = {true}
+                              showExpandableButton = {true}
+                          />
+                          <CardText expandable={true}>
+                              API Token -  {account.token}
+                          </CardText>
+                      </Card>
+                  </div>
+
+              </header>
+
+              {connectionList}
+              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+              <RaisedButton
+                  label = "Create Connection"
+              />
+            </div>
+        </MuiThemeProvider>
     );
   }
 }
