@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const request = require('request-promise');
 const config = require('config');
-const aws = require('./aws/aws.js');
-const ssh = require('./aws/ssh,js');
+const aws = require('../../aws/aws.js');
+const ssh = require('../../aws/ssh.js');
 
 router.get('/connections', function (req, res) {
     const dataReceiver = config.servers['data-receiver'];
@@ -19,13 +19,62 @@ router.get('/connections', function (req, res) {
     });
 });
 
-router.post('/connection', function (req, res) {
+router.post('/:username/connection', function (req, res) {
     res.setHeader('Content-Type', 'application/json');
+
+    const dataReceiver = config.servers['data-receiver'];
+    const username = req.params.username;
+    const dbName = req.body.dbName;
 
     aws.getPublicDNS()
         .then(function (dns) {
-            ssh.getMongoConnection(dns).then(function (connInfo) {
-                res.end(JSON.stringify(connInfo));
+            ssh.getMongoConnection(dns, dbName).then(function (connInfo) {
+                const options = {
+                    method: 'GET',
+                    uri: dataReceiver.address + ':' + dataReceiver.port + '/api/v1/mongo/accounts/documents',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + config.token
+                    }
+                };
+
+                return request(options)
+                    .then(function (accounts) {
+                        let user = null;
+                        for (const accountNo in accounts) {
+                            const account = accounts[accountNo];
+
+                            if (account.name === username) {
+                                user = account;
+                            }
+                        }
+
+                        user.databases.append(connInfo);
+                        console.log(accounts);
+
+                        const options = {
+                            method: 'PUT',
+                            uri: dataReceiver.address + ':' + dataReceiver.port + '/api/v1/mongo/accounts/document',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + config.token
+                            },
+                            body: {
+                                query: '{username: ' + username + '}',
+                                data: JSON.stringify(user)
+                            }
+                        }
+
+                        return request(options)
+                            .then(function () {
+                                res.end(JSON.stringify({'success': 1}));
+                            })
+                            .catch(function (err) {
+                                res.end(JSON.stringify({'error': err}));
+                            })
+                    }).catch(function (err) {
+                        res.end(JSON.stringify({'error': err}));
+                    });
             });
         })
         .catch(function (err) {

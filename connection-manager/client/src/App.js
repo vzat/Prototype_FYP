@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import db from './utils/db.js';
+import conn from './utils/conn.js';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
@@ -72,6 +73,14 @@ class App extends Component {
     });
   };
 
+  createConnection = (dbName) => {
+      const username = 'jsmith';
+      conn.createConnection(username, dbName, status => {
+          console.log(status);
+          this.getConnections();
+      });
+  };
+
   render() {
     const styles = {
         card: {
@@ -139,6 +148,7 @@ class App extends Component {
               <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
               <RaisedButton
                   label = "Create Connection"
+                  onClick = {() => this.createConnection('autoTest')}
               />
             </div>
         </MuiThemeProvider>
