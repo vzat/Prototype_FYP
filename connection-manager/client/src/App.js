@@ -24,7 +24,7 @@ class App extends Component {
           token: ''
       },
       DBDialog: false,
-      dbName: 'test'
+      dbName: ''
   };
 
   componentDidMount = () => {
@@ -175,6 +175,7 @@ class App extends Component {
     return (
         <MuiThemeProvider>
             <div className="App">
+            
                 <Dialog
                     title = "Add Database"
                     open = {this.state.DBDialog}

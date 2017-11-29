@@ -3,12 +3,6 @@ const logger = require('../utils/logger.js');
 const config = require('config');
 let localDB = null;
 
-// function connect(token) {
-//     return localDB.collections().then(function () {
-//
-//     });
-// };
-
 function getConnectionInfo(token, database) {
     return new Promise(function (resolve, reject) {
         const accounts = localDB.collection('accounts');
@@ -122,6 +116,24 @@ module.exports = {
                 });
         });
     },
+    createCollection: function (token, database, collectionName) {
+        return new Promise(function (resolve, reject) {
+            connect(token, database)
+                .then(function (db) {
+                    db.createCollection(collectionName)
+                        .then(function () {
+                            resolve();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            reject(err);
+                        })
+                        .finally(function () {
+                            db.close();
+                        });
+                });
+        });
+    },
     replaceDocument: function (token, database, collectionName, query, data) {
         return new Promise(function (resolve, reject) {
             connect(token, database)
@@ -129,7 +141,6 @@ module.exports = {
                     const collection = db.collection(collectionName);
                     collection.replaceOne(query, data)
                         .then(function () {
-                            console.log('Replaced?');
                             resolve();
                         })
                         .catch(function (err) {

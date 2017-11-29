@@ -19,7 +19,8 @@ class App extends Component {
         },
         data: {
         },
-        collectionDialog: false
+        collectionDialog: false,
+        collectionName: ''
     };
 
     componentDidMount = () => {
@@ -73,6 +74,25 @@ class App extends Component {
         });
     };
 
+    setCollectionName = (event) => {
+        this.setState({
+            collectionName: event.target.value
+        });
+    };
+
+    createCollection = (collectionName) => {
+        const self = this;
+
+        db.createCollection(this.state.database, this.state.token, collectionName, status => {
+            this.getCollections(self.state.database, self.state.token);
+        });
+
+        this.setState({
+            collectionName: '',
+            collectionDialog: false
+        });
+    };
+
     render() {
       const styles = {
           paper: {
@@ -121,9 +141,12 @@ class App extends Component {
           <TextField
               hintText = "Collection Name"
               fullWidth = {true}
+              value = {this.state.collectionName}
+              onChange = {this.setCollectionName}
           />,
           <RaisedButton
               label = "Submit"
+              onClick = {() => this.createCollection(this.state.collectionName)}
           />,
           <RaisedButton
               label = "Cancel"
@@ -146,8 +169,10 @@ class App extends Component {
                 <div className = "Menu">
                     <Paper style = {styles.paper}>
                         <h3>Collections</h3>
-                        <Menu style = {styles.menu}>
-                            { collectionList }
+                        <Menu
+                            style = {styles.menu}
+                            disableAutoFocus = {true} >
+                                { collectionList }
                         </Menu>
                         <RaisedButton
                             label = "New Collection"
