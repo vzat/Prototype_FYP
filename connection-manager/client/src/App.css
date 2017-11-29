@@ -9,9 +9,6 @@
 
 .connection {
   padding: 10px;
-  /*border-style: solid;*/
-  /*display: inline-block;*/
-  /*width: 400px;*/
   float: left;
 }
 
@@ -25,5 +22,5 @@
 }
 
 .create-connection {
-  display: block;
+  padding: 10px;
 }

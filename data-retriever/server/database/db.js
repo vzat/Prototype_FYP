@@ -134,6 +134,29 @@ module.exports = {
                 });
         });
     },
+    insertDocument: function (token, database, collectionName, data) {
+        return new Promise(function (resolve, reject) {
+            connect(token, database)
+                .then(function (db) {
+                    const collection = db.collection(collectionName);
+                    collection.insert([data])
+                        .then(function () {
+                            resolve();
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            reject();
+                        })
+                        .finally(function () {
+                            db.close();
+                        });
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    reject(err);
+                });
+        });
+    },
     replaceDocument: function (token, database, collectionName, query, data) {
         return new Promise(function (resolve, reject) {
             connect(token, database)

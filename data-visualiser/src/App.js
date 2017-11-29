@@ -168,6 +168,8 @@ class App extends Component {
 
                 <div className = "Menu">
                     <Paper style = {styles.paper}>
+                        <h2>Data Visualiser</h2>
+                        <hr/>
                         <h3>Collections</h3>
                         <Menu
                             style = {styles.menu}

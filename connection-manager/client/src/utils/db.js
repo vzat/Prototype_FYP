@@ -1,5 +1,4 @@
 function getConnections(username, connections) {
-    // Use address instead of localhost
     return fetch('http://localhost:4001/api/v1/mongo/accounts/documents', {
         method: 'GET',
         headers: {

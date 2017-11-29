@@ -59,6 +59,23 @@ router.post('/:database/collection', function (req, res) {
         });
 });
 
+router.post('/:database/:collection/document', function (req, res) {
+    const token = getToken(req.get('Authorization'));
+    const database = req.params.database;
+    const collection = req.params.collection;
+    const data = req.body.data;
+
+    res.setHeader('Content-Type', 'application/json');
+
+    db.insertDocument(token, database, collection, data)
+        .then(function () {
+            res.send(JSON.stringify({}));
+        })
+        .catch(function (err) {
+            res.send(JSON.stringify({'error': err}));
+        });
+});
+
 router.put('/:database/:collection/document', function (req, res) {
     const token = getToken(req.get('Authorization'));
     const database = req.params.database;

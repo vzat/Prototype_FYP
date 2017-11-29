@@ -12,11 +12,6 @@ import TextField from 'material-ui/TextField';
 class App extends Component {
   state = {
       connections: {
-          name: '',
-          address: '',
-          port: '',
-          dbuser: '',
-          dbpass: ''
       },
       account: {
           username: '',
@@ -28,53 +23,54 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    this.getConnections();
+      this.getConnections();
   };
 
   getConnections = () => {
-    const username = 'jsmith';
-    db.getConnections(username, connections => {
-          for (const connNo in connections) {
-              const connection = connections[connNo];
+      const username = 'jsmith';
+      db.getConnections(username, connections => {
+            for (const connNo in connections) {
+                const connection = connections[connNo];
 
-              if (connection.username === username) {
-                  // Set Account Info
-                  const account = {
-                      username: connection.username,
-                      email: connection.email,
-                      token: connection.token
-                  };
-                  this.setState({
-                      account: account
-                  });
+                if (connection.username === username) {
+                    // Set Account Info
+                    const account = {
+                        username: connection.username,
+                        email: connection.email,
+                        token: connection.token
+                    };
+                    this.setState({
+                        account: account
+                    });
 
-                  // Set Databases Info
-                  if (connection.databases) {
-                      let conns = [];
-                      for (const databaseNo in connection.databases) {
-                          const database = connection.databases[databaseNo];
-                          const conn = {
-                              name: database.name,
-                              address: database.address,
-                              port: database.port,
-                              dbuser: database.username,
-                              dbpass: database.password
-                          }
-                          conns.push(conn);
-                      }
-                      if (conns.length === 0) {
-                          const conn = {
-                              empty: 1
-                          }
-                          conns.push(conn);
-                      }
-                      this.setState({
-                          connections: conns
-                      });
-                  }
-              }
-          }
-    });
+                    // Set Databases Info
+                    if (connection.databases && connection.databases.length > 0) {
+                        console.log('???');
+                        let conns = [];
+                        for (const databaseNo in connection.databases) {
+                            const database = connection.databases[databaseNo];
+                            const conn = {
+                                name: database.name,
+                                address: database.address,
+                                port: database.port,
+                                dbuser: database.username,
+                                dbpass: database.password
+                            }
+                            conns.push(conn);
+                        }
+                        if (conns.length === 0) {
+                            const conn = {
+                                empty: 1
+                            }
+                            conns.push(conn);
+                        }
+                        this.setState({
+                            connections: conns
+                        });
+                    }
+                }
+            }
+      });
   };
 
   createConnection = (dbName) => {
@@ -89,7 +85,6 @@ class App extends Component {
   };
 
   dataVisualiserRedirect = (database) => {
-      console.log('redirect');
       const token = this.state.account.token;
       window.location.href = 'http://localhost:4000?database=' + database + '&token=' + token;
   }
@@ -114,13 +109,6 @@ class App extends Component {
 
 
   render() {
-    const styles = {
-        card: {
-            height: "100%",
-            width: "100%"
-        }
-    }
-
     let connections = this.state.connections;
     let connectionList = Object.keys(connections).map((connectionNo) => (
         <div className="connection">
@@ -174,18 +162,18 @@ class App extends Component {
 
     return (
         <MuiThemeProvider>
-            <div className="App">
-            
+            <div className = "App">
+
                 <Dialog
                     title = "Add Database"
                     open = {this.state.DBDialog}
                     actions = {dbActions}
                 />
 
-                <header className="App-header">
-                    <h1 class="header"> Connection Manager </h1>
+                <header className = "App-header">
+                    <h1 className = "header"> Connection Manager </h1>
 
-                    <div class="account">
+                    <div className = "account">
                         <Card>
                             <CardHeader
                                 title = {account.username}
@@ -201,12 +189,14 @@ class App extends Component {
 
                 </header>
 
+                <div className = "create-connection">
+                    <RaisedButton
+                        label = "New Connection"
+                        onClick = {() => this.openDBDialog()}
+                    />
+                </div>
+
                 {connectionList}
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-                <RaisedButton
-                    label = "Create Connection"
-                    onClick = {() => this.openDBDialog()}
-                />
             </div>
         </MuiThemeProvider>
     );

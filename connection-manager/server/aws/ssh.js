@@ -10,21 +10,26 @@ module.exports = {
             privateKey: './server/keys/MongoDB_1.pem'
         })
             .then(function() {
+                // Generate username and password
                 let userPromise = crypto.randomBytes(5);
                 let passPromise = crypto.randomBytes(5);
 
                 return Promise.all([userPromise, passPromise])
                     .then(function (values) {
-                        // const username = values[0]
                         const username = values[0].toString('base64');
                         const password = values[1].toString('base64');
-                        // --env MONGO_INITDB_ROOT_USERNAME=' + username + ' --env MONGO_INITDB_ROOT_PASSWORD=' + password + '
+
+                        // Create database container
                         return ssh.execCommand('docker run -d -p 27017 --restart=always mongo', { cwd: '/var' })
                             .then(function (data) {
                                 const containerID = data.stdout;
+
+                                // Get container port
                                 return ssh.execCommand('docker port ' + containerID, { cwd: '/var' })
                                     .then(function (data) {
                                         const port = data.stdout.substring(data.stdout.indexOf(':') + 1);
+
+                                        // Create database
                                         return ssh.execCommand('docker exec ' + containerID + ' mongo --eval "db = db.getSiblingDB(\'' + dbName + '\'); db.test.insert({});"')
                                             .then(function () {
                                                 ssh.dispose();
@@ -39,8 +44,9 @@ module.exports = {
                                                 return connectionInfo;
                                             })
                                             .catch(function (err) {
+                                                console.log(err);
                                                 return err;
-                                            })
+                                            });
                                     });
                             });
                     }).catch(function (err) {

@@ -17,20 +17,5 @@
     "password": "1234",
     "email": "jsmith@smiths.com",
     "token": "a123",
-    "databases": [{
-        "name": "blog",
-        "address": "localhost",
-        "port": 27017,
-        "username": "user",
-        "password": "pass",
-        "type": "single-node"
-    },
-    {
-        "name": "tests",
-        "address": "localhost",
-        "port": 27017,
-        "username": "user",
-        "password": "pass",
-        "type": "single-node"
-    }]
+    "databases": []
 }
