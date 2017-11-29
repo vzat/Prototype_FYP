@@ -25,7 +25,7 @@ module.exports = {
                                 return ssh.execCommand('docker port ' + containerID, { cwd: '/var' })
                                     .then(function (data) {
                                         const port = data.stdout.substring(data.stdout.indexOf(':') + 1);
-                                        return ssh.execCommand('docker exec ' + containerID + ' mongo --eval "db = db.getSiblingDB(\'' + dbName + '\'); db.dummy.insert({});"')
+                                        return ssh.execCommand('docker exec ' + containerID + ' mongo --eval "db = db.getSiblingDB(\'' + dbName + '\'); db.test.insert({});"')
                                             .then(function () {
                                                 ssh.dispose();
                                                 const connectionInfo = {

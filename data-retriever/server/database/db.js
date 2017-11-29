@@ -104,22 +104,22 @@ module.exports = {
     getDocuments: function (token, database, collectionName) {
         return new Promise(function (resolve, reject) {
             connect(token, database)
-              .then(function (db) {
-                  const collection = db.collection(collectionName);
-                  collection.find().toArray()
-                      .then(function (documents) {
-                          resolve(documents);
-                      })
-                      .catch(function (err) {
-                          reject(err);
-                      })
-                      .finally(function () {
-                          db.close();
-                      });
-              })
-              .catch(function (err) {
-                  reject(err);
-              });
+                .then(function (db) {
+                    const collection = db.collection(collectionName);
+                    collection.find().toArray()
+                        .then(function (documents) {
+                            resolve(documents);
+                        })
+                        .catch(function (err) {
+                            reject(err);
+                        })
+                        .finally(function () {
+                            db.close();
+                        });
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
         });
     },
     replaceDocument: function (token, database, collectionName, query, data) {
@@ -129,9 +129,11 @@ module.exports = {
                     const collection = db.collection(collectionName);
                     collection.replaceOne(query, data)
                         .then(function () {
+                            console.log('Replaced?');
                             resolve();
                         })
                         .catch(function (err) {
+                            console.log(err);
                             reject(err);
                         })
                         .finally(function () {

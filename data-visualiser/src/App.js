@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import db from './utils/db.js'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -24,15 +23,31 @@ class App extends Component {
     };
 
     componentDidMount = () => {
-        this.getCollections(this.state.database, this.state.token);
-        this.getData('posts');
+        // Get connection info
+        const url = window.location.href;
+        const andIndex = url.indexOf('&');
+        const databaseParam = url.substring(url.indexOf('database=') + 'database='.length, andIndex);
+        const tokenParam = url.substring(url.indexOf('token=') + 'token='.length);
+        if (databaseParam !== null && tokenParam !== null) {
+            this.setState({
+                database: databaseParam,
+                token: tokenParam
+            });
+            const self = this;
+            this.getCollections(databaseParam, tokenParam).then(function(collections) {
+                if (collections.length > 0) {
+                    self.getData(collections[0].name);
+                }
+            });
+        }
     };
 
     getCollections = (database, token) => {
-        db.getCollections(database, token, collections => {
+        return db.getCollections(database, token, collections => {
             this.setState({
                 collections: collections
             });
+            return collections;
         });
     };
 

@@ -6,6 +6,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 
 class App extends Component {
   state = {
@@ -20,7 +22,9 @@ class App extends Component {
           username: '',
           email: '',
           token: ''
-      }
+      },
+      DBDialog: false,
+      dbName: 'test'
   };
 
   componentDidMount = () => {
@@ -76,10 +80,38 @@ class App extends Component {
   createConnection = (dbName) => {
       const username = 'jsmith';
       conn.createConnection(username, dbName, status => {
-          console.log(status);
           this.getConnections();
       });
+      this.setState({
+          dbName: '',
+          DBDialog: false
+      })
   };
+
+  dataVisualiserRedirect = (database) => {
+      console.log('redirect');
+      const token = this.state.account.token;
+      window.location.href = 'http://localhost:4000?database=' + database + '&token=' + token;
+  }
+
+  openDBDialog = () => {
+      this.setState({
+          DBDialog: true
+      });
+  };
+
+  closeDBDialog = () => {
+      this.setState({
+          DBDialog: false
+      });
+  };
+
+  setDatabaseName = (event) => {
+      this.setState({
+          dbName: event.target.value
+      });
+  };
+
 
   render() {
     const styles = {
@@ -110,6 +142,7 @@ class App extends Component {
                     <RaisedButton
                         label = "View"
                         primary = {true}
+                        onClick = {() => this.dataVisualiserRedirect(connections[connectionNo].name)}
                     />
                 </CardActions>
                 <CardText expandable={true}>
@@ -122,34 +155,57 @@ class App extends Component {
     ));
     let account = this.state.account;
 
+    const dbActions =[
+        <TextField
+            hintText = "Database Name"
+            fullWidth = {true}
+            value={this.state.dbName}
+            onChange = {this.setDatabaseName}
+        />,
+        <RaisedButton
+            label = "Submit"
+            onClick = {() => this.createConnection(this.state.dbName)}
+        />,
+        <RaisedButton
+            label = "Cancel"
+            onClick = {this.closeDBDialog}
+        />
+    ];
+
     return (
         <MuiThemeProvider>
             <div className="App">
-              <header className="App-header">
-                  <h1 class="header"> Connection Manager </h1>
+                <Dialog
+                    title = "Add Database"
+                    open = {this.state.DBDialog}
+                    actions = {dbActions}
+                />
 
-                  <div class="account">
-                      <Card>
-                          <CardHeader
-                              title = {account.username}
-                              subtitle = {account.email}
-                              actAsExpander = {true}
-                              showExpandableButton = {true}
-                          />
-                          <CardText expandable={true}>
-                              API Token -  {account.token}
-                          </CardText>
-                      </Card>
-                  </div>
+                <header className="App-header">
+                    <h1 class="header"> Connection Manager </h1>
 
-              </header>
+                    <div class="account">
+                        <Card>
+                            <CardHeader
+                                title = {account.username}
+                                subtitle = {account.email}
+                                actAsExpander = {true}
+                                showExpandableButton = {true}
+                            />
+                            <CardText expandable={true}>
+                                API Token -  {account.token}
+                            </CardText>
+                        </Card>
+                    </div>
 
-              {connectionList}
-              <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-              <RaisedButton
-                  label = "Create Connection"
-                  onClick = {() => this.createConnection('autoTest')}
-              />
+                </header>
+
+                {connectionList}
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                <RaisedButton
+                    label = "Create Connection"
+                    onClick = {() => this.openDBDialog()}
+                />
             </div>
         </MuiThemeProvider>
     );
