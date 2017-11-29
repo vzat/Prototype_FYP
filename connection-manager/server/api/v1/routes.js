@@ -40,17 +40,19 @@ router.post('/:username/connection', function (req, res) {
 
                 return request(options)
                     .then(function (accounts) {
+                        accounts = JSON.parse(accounts);
+
                         let user = null;
                         for (const accountNo in accounts) {
                             const account = accounts[accountNo];
 
-                            if (account.name === username) {
+                            if (account.username === username) {
                                 user = account;
                             }
                         }
 
-                        user.databases.append(connInfo);
-                        console.log(accounts);
+                        user.databases.push(connInfo);
+                        delete user._id;
 
                         const options = {
                             method: 'PUT',
@@ -59,11 +61,11 @@ router.post('/:username/connection', function (req, res) {
                                 'Content-Type': 'application/json',
                                 'Authorization': 'Bearer ' + config.token
                             },
-                            body: {
-                                query: '{username: ' + username + '}',
-                                data: JSON.stringify(user)
-                            }
-                        }
+                            body: JSON.stringify({
+                                query: {'username': username},
+                                data: user
+                            })
+                        };
 
                         return request(options)
                             .then(function () {
@@ -73,6 +75,7 @@ router.post('/:username/connection', function (req, res) {
                                 res.end(JSON.stringify({'error': err}));
                             })
                     }).catch(function (err) {
+                        console.log(err);
                         res.end(JSON.stringify({'error': err}));
                     });
             });

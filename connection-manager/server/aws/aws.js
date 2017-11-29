@@ -18,7 +18,8 @@ module.exports = {
             'AvailabilityZone',
             'State'
         ];
-        return aws.command('ec2 describe-instances --filters "Name=tag:' + instanceType + ',Values=1"')
+        // "Name=tag:' + instanceType + ',Values=1"
+        return aws.command('ec2 describe-instances --filters "Name=tag:serverID,Values=2"')
             .then(function (data) {
                 const json = JSON.parse(data.raw);
                 const instancesJSON = json.Reservations[0].Instances;
@@ -77,26 +78,3 @@ module.exports = {
             });
     }
 };
-
-// myAws.stopInstance('i-0c5977a515bb3dc3a');
-
-// myAws.getPublicDNS()
-//     .then(function (publicDNS) {
-//         console.log(publicDNS);
-//     })
-//     .catch(function (err) {
-//         console.log(err);
-//     });
-
-// myAws.getInstances('singleNode')
-//     .then(function(instances) {
-//         if (instances !== undefined && instances[0].State.Name === 'stopped') {
-//             myAws.startInstance(instances[0].InstanceId);
-//         }
-//         else if (instances !== undefined) {
-//             myAws.stopInstance(instances[0].InstanceId);
-//         }
-//     })
-//     .catch(function(err) {
-//         console.log(err);
-//     });
